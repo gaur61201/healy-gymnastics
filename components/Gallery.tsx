@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -33,6 +33,59 @@ const galleryItems: GalleryItem[] = [
   { type: 'image', src: '/images/gallery/image12.png', alt: 'Young gymnasts Kuwait',                       filter: 'training'      },
   { type: 'video', src: '/videos/reel-04.mp4',         alt: 'Gymnastics reel 4',                           filter: 'videos'        },
 ];
+
+// ─── Carousel video card ──────────────────────────────────────────────────────
+// Uses a DOM ref to toggle muted because React's `muted` prop doesn't
+// reflect changes after mount.
+
+function CarouselVideoCard({
+  src,
+  isUnmuted,
+  onMuteToggle,
+}: {
+  src: string;
+  isUnmuted: boolean;
+  onMuteToggle: () => void;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isUnmuted;
+    }
+  }, [isUnmuted]);
+
+  return (
+    <div className="relative w-full h-full bg-black">
+      <video
+        ref={videoRef}
+        src={assetPath(src)}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        className="w-full h-full object-cover"
+        style={{ filter: 'brightness(0.7)', transition: 'filter 0.3s' }}
+      />
+
+      {/* Mute toggle — stopPropagation so it doesn't open the lightbox */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onMuteToggle(); }}
+        aria-label={isUnmuted ? 'Mute video' : 'Unmute video'}
+        className="absolute bottom-2 right-2 w-7 h-7 rounded-full flex items-center justify-center text-xs"
+        style={{
+          background: 'rgba(0,0,0,0.65)',
+          border: '1px solid rgba(201,168,76,0.4)',
+          zIndex: 10,
+          cursor: 'pointer',
+        }}
+      >
+        {isUnmuted ? '🔊' : '🔇'}
+      </button>
+    </div>
+  );
+}
 
 // ─── Lightbox ────────────────────────────────────────────────────────────────
 
@@ -132,12 +185,19 @@ export default function Gallery() {
   const carouselRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const [activeFilter, setActiveFilter]   = useState<FilterType>('all');
-  const [isPaused, setIsPaused]           = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeFilter, setActiveFilter]         = useState<FilterType>('all');
+  const [isPaused, setIsPaused]                 = useState(false);
+  const [lightboxIndex, setLightboxIndex]       = useState<number | null>(null);
+  // Track which filtered-array index has its video unmuted (null = all muted)
+  const [unmutedFilteredIdx, setUnmutedFilteredIdx] = useState<number | null>(null);
 
   const filtered    = activeFilter === 'all' ? galleryItems : galleryItems.filter((i) => i.filter === activeFilter);
   const loopedItems = [...filtered, ...filtered]; // duplicate for seamless loop
+
+  // Reset unmuted state when filter changes
+  useEffect(() => {
+    setUnmutedFilteredIdx(null);
+  }, [activeFilter]);
 
   // ── Auto-scroll ─────────────────────────────────────────────────────────────
   const stopScroll = useCallback(() => {
@@ -152,9 +212,7 @@ export default function Gallery() {
     intervalRef.current = setInterval(() => {
       const el = carouselRef.current;
       if (!el) return;
-      // 40px/sec  →  40 × (50 / 1000) = 2px per 50 ms tick
       el.scrollLeft += 2;
-      // Seamless loop: reset when we've scrolled through the first clone set
       const half = el.scrollWidth / 2;
       if (el.scrollLeft >= half) {
         el.scrollLeft -= half;
@@ -162,7 +220,6 @@ export default function Gallery() {
     }, 50);
   }, [stopScroll]);
 
-  // Start / stop based on pause state and lightbox
   useEffect(() => {
     if (!isPaused && lightboxIndex === null) {
       startScroll();
@@ -172,7 +229,6 @@ export default function Gallery() {
     return stopScroll;
   }, [isPaused, lightboxIndex, startScroll, stopScroll]);
 
-  // Reset scroll to start when filter changes, then restart
   useEffect(() => {
     if (carouselRef.current) carouselRef.current.scrollLeft = 0;
   }, [activeFilter]);
@@ -312,46 +368,37 @@ export default function Gallery() {
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {loopedItems.map((item, i) => (
-            <div
-              key={`${item.src}-${i}`}
-              className="w-72 h-48 rounded-xl overflow-hidden flex-shrink-0 mx-2 cursor-pointer group"
-              onClick={() => setLightboxIndex(i % filtered.length)}
-            >
-              {item.type === 'image' ? (
-                <div className="relative w-full h-full">
-                  <Image
-                    src={assetPath(item.src)}
-                    alt={item.alt}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-              ) : (
-                /* Video thumbnail with gold play button */
-                <div className="relative w-full h-full bg-black">
-                  <video
-                    src={assetPath(item.src)}
-                    muted
-                    playsInline
-                    preload="metadata"
-                    className="w-full h-full object-cover"
-                    style={{ filter: 'brightness(0.55)', transition: 'filter 0.3s' }}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                    <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center"
-                      style={{ background: 'rgba(201,168,76,0.9)' }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 20 20" fill="#080808">
-                        <path d="M6 4l12 6-12 6z" />
-                      </svg>
-                    </div>
+          {loopedItems.map((item, i) => {
+            const filteredIdx = i % filtered.length;
+            return (
+              <div
+                key={`${item.src}-${i}`}
+                className="w-72 h-48 rounded-xl overflow-hidden flex-shrink-0 mx-2 cursor-pointer group"
+                onClick={() => setLightboxIndex(filteredIdx)}
+              >
+                {item.type === 'image' ? (
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={assetPath(item.src)}
+                      alt={item.alt}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                ) : (
+                  <CarouselVideoCard
+                    src={item.src}
+                    isUnmuted={unmutedFilteredIdx === filteredIdx}
+                    onMuteToggle={() =>
+                      setUnmutedFilteredIdx(
+                        unmutedFilteredIdx === filteredIdx ? null : filteredIdx
+                      )
+                    }
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Right arrow */}
