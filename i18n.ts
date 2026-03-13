@@ -1,9 +1,3 @@
-import { getRequestConfig } from 'next-intl/server';
-
-export default getRequestConfig(async ({ requestLocale }) => {
-  const locale = (await requestLocale) ?? 'en';
-  return {
-    locale,
-    messages: (await import(`./messages/${locale}.json`)).default,
-  };
-});
+// This file is no longer used.
+// Language management is handled by contexts/LanguageContext.tsx
+export {};
