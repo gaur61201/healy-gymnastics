@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useTranslations } from '@/contexts/LanguageContext';
+import { assetPath } from '@/utils/assetPath';
 
 type FilterType = 'all' | 'training' | 'competitions' | 'videos';
 
@@ -69,7 +70,7 @@ function Lightbox({ items, index, onClose, onPrev, onNext }: LightboxProps) {
       >
         {item.type === 'image' ? (
           <Image
-            src={item.src}
+            src={assetPath(item.src)}
             alt={item.alt}
             width={1200}
             height={800}
@@ -77,7 +78,7 @@ function Lightbox({ items, index, onClose, onPrev, onNext }: LightboxProps) {
           />
         ) : (
           <video
-            src={item.src}
+            src={assetPath(item.src)}
             controls
             autoPlay
             playsInline
@@ -320,7 +321,7 @@ export default function Gallery() {
               {item.type === 'image' ? (
                 <div className="relative w-full h-full">
                   <Image
-                    src={item.src}
+                    src={assetPath(item.src)}
                     alt={item.alt}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -330,7 +331,7 @@ export default function Gallery() {
                 /* Video thumbnail with gold play button */
                 <div className="relative w-full h-full bg-black">
                   <video
-                    src={item.src}
+                    src={assetPath(item.src)}
                     muted
                     playsInline
                     preload="metadata"

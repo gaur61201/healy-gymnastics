@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { useTranslations } from '@/contexts/LanguageContext';
+import { assetPath } from '@/utils/assetPath';
 
 export default function About() {
   const t = useTranslations('about');
@@ -130,7 +131,7 @@ export default function About() {
               }}
             >
               <Image
-                src="/images/gallery/image5.png"
+                src={assetPath('/images/gallery/image5.png')}
                 alt="Healy Gymnastics Academy training session"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -154,7 +155,7 @@ export default function About() {
               }}
             >
               <Image
-                src="/images/gallery/image8.png"
+                src={assetPath('/images/gallery/image8.png')}
                 alt="Gymnastics athletes at Healy Academy Kuwait"
                 fill
                 style={{ objectFit: 'cover' }}
@@ -179,7 +180,7 @@ export default function About() {
               }}
             >
               <Image
-                src="/images/gallery/image9.png"
+                src={assetPath('/images/gallery/image9.png')}
                 alt="Gymnastics competition at Healy Academy"
                 fill
                 style={{ objectFit: 'cover' }}

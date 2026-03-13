@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useTranslations } from '@/contexts/LanguageContext';
+import { assetPath } from '@/utils/assetPath';
 
 interface Coach {
   key: string;
@@ -93,7 +94,7 @@ function CoachCard({
         }}
       >
         <Image
-          src={coach.image}
+          src={assetPath(coach.image)}
           alt={coachData.name}
           fill
           style={{

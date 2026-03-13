@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useTranslations } from '@/contexts/LanguageContext';
+import { assetPath } from '@/utils/assetPath';
 
 const socialLinks = [
   {
@@ -82,7 +83,7 @@ export default function Footer() {
         >
           <div className="flex items-center gap-4">
             <Image
-              src="/images/logo.png"
+              src={assetPath('/images/logo.png')}
               alt="Healy Gymnastics Academy"
               width={48}
               height={48}
@@ -218,7 +219,7 @@ export default function Footer() {
               className="w-6 h-6 rounded-full flex items-center justify-center"
               style={{ background: 'rgba(201,168,76,0.1)' }}
             >
-              <Image src="/images/logo.png" alt="HGA" width={14} height={14} style={{ objectFit: 'contain' }} />
+              <Image src={assetPath('/images/logo.png')} alt="HGA" width={14} height={14} style={{ objectFit: 'contain' }} />
             </div>
             <span style={{ fontFamily: 'var(--font-bebas)', fontSize: '13px', color: 'rgba(201,168,76,0.4)', letterSpacing: '0.1em' }}>
               HEALY GYMNASTICS ACADEMY · KUWAIT

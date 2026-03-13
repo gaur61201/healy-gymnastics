@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from '@/contexts/LanguageContext';
 import { useModal } from '@/contexts/ModalContext';
+import { assetPath } from '@/utils/assetPath';
 
 export default function Hero() {
   const t = useTranslations('hero');
@@ -38,7 +39,7 @@ export default function Hero() {
           muted
           loop
           playsInline
-          src="/videos/hero-background.mp4"
+          src={assetPath('/videos/hero-background.mp4')}
           onError={() => setVideoError(true)}
           className="absolute inset-0 w-full h-full object-cover"
           style={{ zIndex: 0 }}

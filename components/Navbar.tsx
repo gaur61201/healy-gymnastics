@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useTranslations, useLanguage } from '@/contexts/LanguageContext';
+import { assetPath } from '@/utils/assetPath';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useModal } from '@/contexts/ModalContext';
 
@@ -79,7 +80,7 @@ export default function Navbar() {
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <Image
-              src="/images/logo.png"
+              src={assetPath('/images/logo.png')}
               alt="HGA Logo"
               width={32}
               height={32}

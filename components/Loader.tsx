@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { assetPath } from '@/utils/assetPath';
 
 export default function Loader() {
   const [show, setShow] = useState(false);
@@ -103,7 +104,7 @@ export default function Loader() {
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               >
                 <Image
-                  src="/images/logo.png"
+                  src={assetPath('/images/logo.png')}
                   alt="Healy Gymnastics Academy Logo"
                   width={60}
                   height={60}
