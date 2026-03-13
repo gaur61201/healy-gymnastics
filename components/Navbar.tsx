@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
+import { useTranslations, useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useModal } from '@/contexts/ModalContext';
 
@@ -12,17 +11,13 @@ const sectionIds = ['hero', 'programs', 'team', 'gallery', 'competition', 'conta
 
 export default function Navbar() {
   const t = useTranslations('nav');
-  const router = useRouter();
-  const pathname = usePathname();
+  const { lang, isRTL, toggleLanguage } = useLanguage();
   const { openModal } = useModal();
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const observerRef = useRef<IntersectionObserver | null>(null);
-
-  const currentLocale = pathname.startsWith('/ar') ? 'ar' : 'en';
-  const isRTL = currentLocale === 'ar';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,12 +60,6 @@ export default function Navbar() {
       el.scrollIntoView({ behavior: 'smooth' });
     }
     setMobileOpen(false);
-  };
-
-  const toggleLocale = () => {
-    const newLocale = currentLocale === 'en' ? 'ar' : 'en';
-    const newPath = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
-    router.push(newPath);
   };
 
   return (
@@ -130,11 +119,11 @@ export default function Navbar() {
               {t('bookTrial')}
             </button>
             <button
-              onClick={toggleLocale}
+              onClick={toggleLanguage}
               className="text-sm font-medium transition-colors hover:text-yellow-400"
               style={{ color: 'var(--gray)', letterSpacing: '0.05em' }}
             >
-              {currentLocale === 'en' ? 'عر' : 'EN'}
+              {lang === 'en' ? 'عر' : 'EN'}
             </button>
           </div>
 
@@ -209,10 +198,10 @@ export default function Navbar() {
                   {t('bookTrial')}
                 </button>
                 <button
-                  onClick={toggleLocale}
+                  onClick={toggleLanguage}
                   className="btn-outline px-4 py-3 text-base rounded-sm"
                 >
-                  {currentLocale === 'en' ? 'عر' : 'EN'}
+                  {lang === 'en' ? 'عر' : 'EN'}
                 </button>
               </motion.div>
             </div>

@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/contexts/LanguageContext';
 
 const reels = [
   '/videos/reel-01.mp4',

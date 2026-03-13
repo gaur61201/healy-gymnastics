@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/contexts/LanguageContext';
 
 export default function WhatsAppButton() {
   const t = useTranslations('whatsapp');

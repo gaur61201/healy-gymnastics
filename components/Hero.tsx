@@ -1,8 +1,8 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/contexts/LanguageContext';
 import { useModal } from '@/contexts/ModalContext';
 
 export default function Hero() {

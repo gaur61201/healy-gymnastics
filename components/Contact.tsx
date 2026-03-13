@@ -1,8 +1,8 @@
-'use client';
+﻿'use client';
 
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/contexts/LanguageContext';
 
 export default function Contact() {
   const t = useTranslations('contact');

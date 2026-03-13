@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/contexts/LanguageContext';
 import { useModal } from '@/contexts/ModalContext';
 
 type Particle = { id: number; x: number; y: number; size: number; duration: number; delay: number };

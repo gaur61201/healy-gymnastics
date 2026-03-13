@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/contexts/LanguageContext';
 
 interface StatItem {
   value: number;
