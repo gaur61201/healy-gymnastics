@@ -32,6 +32,7 @@ function ReelCard({ src }: { src: string }) {
         muted
         loop
         playsInline
+        preload="metadata"
         className="w-full h-full object-cover"
         style={{ filter: 'brightness(0.8)', transition: 'filter 0.3s' }}
       />
