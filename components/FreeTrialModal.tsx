@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from '@/contexts/LanguageContext';
 import { useModal } from '@/contexts/ModalContext';
+import { assetPath } from '@/utils/assetPath';
 
 export default function FreeTrialModal() {
   const t = useTranslations('modal');
@@ -163,7 +164,7 @@ export default function FreeTrialModal() {
                 {thumbnails.map((src, i) => (
                   <div key={i} className="relative overflow-hidden rounded-sm" style={{ aspectRatio: '1', height: '80px' }}>
                     <Image
-                      src={src}
+                      src={assetPath(src)}
                       alt={`Healy Gymnastics ${i + 1}`}
                       fill
                       style={{ objectFit: 'cover', filter: 'brightness(0.8)' }}

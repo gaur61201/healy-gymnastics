@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useTranslations } from '@/contexts/LanguageContext';
+import { assetPath } from '@/utils/assetPath';
 
 const reels = [
   '/videos/reel-01.mp4',
@@ -26,7 +27,7 @@ function ReelCard({ src }: { src: string }) {
       }}
     >
       <video
-        src={src}
+        src={assetPath(src)}
         autoPlay
         muted
         loop
